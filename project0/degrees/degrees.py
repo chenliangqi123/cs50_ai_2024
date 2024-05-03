@@ -93,7 +93,23 @@ def shortest_path(source, target):
     """
 
     # TODO
-    raise NotImplementedError
+    # raise NotImplementedError
+    list_of_pairs = []
+    def dfs(source, target, step, list_of_pairs, path):
+        neighbors = neighbors_for_person(source)
+        for neighbor in neighbors:
+            if neighbor[1] == target:
+                list_of_pairs.append(neighbor)
+                path = list_of_pairs
+                return
+            elif path is not None and step >= len(path):
+                return
+            else:
+                dfs(neighbor[1], target, step + 1, list_of_pairs + neighbor, path)
+        if len(list_of_pairs) == 0:
+            return path
+    path = dfs(source, target, 0, list_of_pairs, None)
+    return path
 
 
 def person_id_for_name(name):
