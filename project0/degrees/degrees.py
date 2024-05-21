@@ -94,22 +94,42 @@ def shortest_path(source, target):
 
     # TODO
     # raise NotImplementedError
-    list_of_pairs = []
-    def dfs(source, target, step, list_of_pairs, path):
-        neighbors = neighbors_for_person(source)
-        for neighbor in neighbors:
-            if neighbor[1] == target:
-                list_of_pairs.append(neighbor)
-                path = list_of_pairs
-                return
-            elif path is not None and step >= len(path):
-                return
-            else:
-                dfs(neighbor[1], target, step + 1, list_of_pairs + neighbor, path)
-        if len(list_of_pairs) == 0:
-            return path
-    path = dfs(source, target, 0, list_of_pairs, None)
-    return path
+    # list_of_pairs = []
+    # def dfs(source, target, step, list_of_pairs, path):
+    #     neighbors = neighbors_for_person(source)
+    #     for neighbor in neighbors:
+    #         if neighbor[1] == target:
+    #             list_of_pairs.append(neighbor)
+    #             path = list_of_pairs
+    #             return
+    #         elif path is not None and step >= len(path):
+    #             return
+    #         else:
+    #             list_of_pairs.append(neighbor)
+    #             dfs(neighbor[1], target, step + 1, list_of_pairs, path)
+    #             list_of_pairs.remove(neighbor)
+    #     if len(list_of_pairs) == 0:
+    #         return path
+    # path = dfs(source, target, 0, list_of_pairs, None)
+    # return path
+
+    if source == target:
+        return []
+
+    queue = QueueFrontier()
+    queue.add((source, []))
+    visited = [source]
+
+    while not queue.empty():
+        current_id, path = queue.remove()
+        neighbors = neighbors_for_person(current_id)
+        for movie_id, person_id in neighbors:
+            if person_id == target:
+                return path + [(movie_id, person_id)]
+            if person_id not in visited:
+                queue.add((person_id, path + [(movie_id, person_id)]))
+                visited.append(person_id)
+    return None
 
 
 def person_id_for_name(name):
